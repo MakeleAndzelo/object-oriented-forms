@@ -1,3 +1,44 @@
+class Form
+{
+    constructor(data)
+    {
+        this.originalData = data;
+
+        for(let field in data){
+            this[field] = data.field;
+        }
+
+        this.errors = new Error();
+    }
+
+    reset()
+    {
+
+    }
+
+    data()
+    {
+
+    }
+
+    submit(method, uri)
+    {
+        axios[method](uri, this.data())
+            .then(response => this.onSuccess(response))
+            .catch(error => this.onFail(error))
+    }
+
+    onSuccess(response)
+    {
+
+    }
+
+    onFail(error)
+    {
+
+    }
+}
+
 class Error
 {
     constructor()
@@ -12,40 +53,52 @@ class Error
 
     get(key)
     {
-        return this.errors[key].errors[0];
+        if(this.errors[key].errors) {
+            return this.errors[key].errors[0];
+        }
     }
 
     has(key)
     {
-        return this.errors.hasOwnProperty(key);
+        if(!this.errors.hasOwnProperty(key)) {
+            return false;
+        }
+
+        return this.errors[key].hasOwnProperty('errors');
     }
 
     clear(key)
     {
-        delete this.errors[key];
+        if(key) {
+            delete this.errors[key];
+            return;
+        }
+
+        delete this.errors;
+    }
+
+    any()
+    {
+        for(let error in this.errors) {
+            if (error.length != 0) return true;
+        }
+
+        return false;
     }
 }
 
 new Vue({
     el: '#app',
     data: {
-        name: "",
-        description: "",
-        errors: new Error,
+        form: new Form({
+            name: "",
+            description: "",
+        }),
     },
     methods: {
         onSubmit()
         {
-            axios.post('/posts', {
-                name: this.name,
-                description: this.description,
-            })
-                .then(response => {
-                    console.log(response);
-                })
-                .catch(error => {
-                    this.errors.record(error.response.data.children);
-                })
+            this.form.submit('post', '/posts');
         }
     }
 })

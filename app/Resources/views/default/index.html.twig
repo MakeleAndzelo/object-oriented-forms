@@ -6,26 +6,26 @@
             {% include 'posts/index.html.twig' %}
         {% endif %}
 
-        {{ form_start(form, {"action": "/posts", 'attr': {'novalidate': 'novalidate', '@submit.prevent': 'onSubmit', '@keydown': 'errors.clear($event.target.dataset.key)'}}) }}
+        {{ form_start(form, {"action": "/posts", 'attr': {'novalidate': 'novalidate', '@submit.prevent': 'onSubmit', '@keydown': 'form.errors.clear($event.target.dataset.key)'}}) }}
 
             <div class="field">
                 <label class="label">{{ form_label(form.name) }}</label>
                 <div class="control">
-                    {{ form_widget(form.name, {"attr": {"class": "input", "v-model": "name", 'data-key': "name"}}) }}
+                    {{ form_widget(form.name, {"attr": {"class": "input", ":class": "{'is-danger': form.errors.has('name')}", "v-model": "form.name", 'data-key': "name"}}) }}
                 </div>
-                <p class="help is-danger" v-if="errors.has('name')" v-text="errors.get('name')"></p>
+                <p class="help is-danger" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></p>
             </div>
 
             <div class="field">
                 <label class="label">{{ form_label(form.description) }}</label>
                 <div class="control">
-                    {{ form_widget(form.description, {"attr": {"class": "input", "v-model": "description", 'data-key': "description"}}) }}
+                    {{ form_widget(form.description, {"attr": {"class": "input", ":class": "{'is-danger': form.errors.has('description')}", "v-model": "form.description", 'data-key': "description"}}) }}
                 </div>
-                <p class="help is-danger" v-if="errors.has('description')" v-text="errors.get('description')"></p>
+                <p class="help is-danger" v-if="form.errors.has('description')" v-text="form.errors.get('description')"></p>
             </div>
 
             <div class="control">
-                <button type="submit" class="button is-primary">Submit</button>
+                <button type="submit" :disabled="form.errors.any()" class="button is-primary">Submit</button>
             </div>
 
         {{ form_end(form) }}
