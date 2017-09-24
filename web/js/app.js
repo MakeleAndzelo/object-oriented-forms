@@ -112,12 +112,26 @@ new Vue({
         form: new Form({
             name: "",
             description: "",
-        }, new Error())
+        }, new Error()),
+        posts: [],
     },
+
+    created() {
+        this.getPosts();
+    },
+
     methods: {
         onSubmit()
         {
             this.form.submit('post', '/posts');
+            this.getPosts();
+        },
+        getPosts()
+        {
+            axios.get('/posts')
+                .then(response => {
+                    this.posts = response.data;
+                })
         }
     }
 })

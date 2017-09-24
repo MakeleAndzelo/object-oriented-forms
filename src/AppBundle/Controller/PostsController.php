@@ -11,7 +11,7 @@ class PostsController extends FOSRestController
 {
     public function getPostsAction()
     {
-        $posts = $this->getDoctrine()->getRepository("AppBundle:Post")->findAll();
+        $posts = $this->getDoctrine()->getRepository("AppBundle:Post")->findAllPostsOrderById();
 
         $view = $this->view($posts, 200);
 

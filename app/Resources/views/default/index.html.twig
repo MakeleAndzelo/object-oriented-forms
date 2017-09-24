@@ -2,10 +2,7 @@
 
 {% block body %}
     <div id="app" class="container">
-        {% if posts %}
-            {% include 'posts/index.html.twig' %}
-        {% endif %}
-
+        <br>
         {{ form_start(form, {"action": "/posts", 'attr': {'novalidate': 'novalidate', '@submit.prevent': 'onSubmit', '@keydown': 'form.errors.clear($event.target.dataset.key)'}}) }}
 
             <div class="field">
@@ -29,6 +26,10 @@
             </div>
 
         {{ form_end(form) }}
+        <br>
+
+        {% include 'posts/index.html.twig' %}
+
     </div>
 {% endblock %}
 

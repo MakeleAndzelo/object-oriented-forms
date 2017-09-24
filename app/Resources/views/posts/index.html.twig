@@ -2,12 +2,10 @@
     <p class="panel-heading">
         Posts
     </p>
-    {% for post in posts %}
-        <a class="panel-block">
-            <span class="panel-icon">
-              <i class="fa fa-book"></i>
-            </span>
-                {{ post.name }}
-        </a>
-    {% endfor %}
+    <a class="panel-block" v-for="post in posts">
+        <span class="panel-icon">
+          <i class="fa fa-book"></i>
+        </span>
+        <span v-text="post.name"></span>
+    </a>
 </nav>
