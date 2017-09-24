@@ -25,7 +25,7 @@
             </div>
 
             <div class="control">
-                <button type="submit" :disabled="form.errors.any()" class="button is-primary">Submit</button>
+                <button type="submit" :disabled="form.errors.any()" class="button is-primary" :class="{'is-loading': form.isLoading }">Submit</button>
             </div>
 
         {{ form_end(form) }}

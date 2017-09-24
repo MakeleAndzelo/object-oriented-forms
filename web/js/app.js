@@ -1,6 +1,6 @@
 class Form
 {
-    constructor(data)
+    constructor(data, errors)
     {
         this.originalData = data;
 
@@ -8,21 +8,34 @@ class Form
             this[field] = data.field;
         }
 
-        this.errors = new Error();
+        this.errors = errors;
+        this.isLoading = false;
     }
 
     reset()
     {
+        for (let field in this.originalData) {
+            this[field] = '';
+        }
 
+        this.errors.clear();
     }
 
     data()
     {
+        let data = Object.assign({}, this);
 
+        delete data.errors;
+        delete data.originalData;
+        delete data.isLoading;
+
+        return data;
     }
 
     submit(method, uri)
     {
+        this.isLoading = true;
+
         axios[method](uri, this.data())
             .then(response => this.onSuccess(response))
             .catch(error => this.onFail(error))
@@ -30,12 +43,16 @@ class Form
 
     onSuccess(response)
     {
+        alert(response.statusText);
 
+        this.reset();
+        this.isLoading = false;
     }
 
     onFail(error)
     {
-
+        this.errors.record(error.response.data.children);
+        this.isLoading = false;
     }
 }
 
@@ -74,13 +91,15 @@ class Error
             return;
         }
 
-        delete this.errors;
+        this.errors = {};
     }
 
     any()
     {
         for(let error in this.errors) {
-            if (error.length != 0) return true;
+            if(this.errors[error].hasOwnProperty('errors')) {
+                if (this.errors[error].errors.length != 0) return true;
+            }
         }
 
         return false;
@@ -93,7 +112,7 @@ new Vue({
         form: new Form({
             name: "",
             description: "",
-        }),
+        }, new Error())
     },
     methods: {
         onSubmit()
